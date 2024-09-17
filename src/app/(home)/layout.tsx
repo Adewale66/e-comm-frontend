@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { Manrope } from 'next/font/google';
 import { cn } from '@/lib/utils';
 import './globals.css';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
 
 const fontHeading = Manrope({
   subsets: ['latin'],
@@ -28,9 +30,15 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body
-        className={cn('antialiased', fontHeading.variable, fontBody.variable)}
+        className={cn(
+          'antialiased flex flex-col min-h-screen',
+          fontHeading.variable,
+          fontBody.variable,
+        )}
       >
+        <Header />
         {children}
+        <Footer />
       </body>
     </html>
   );
