@@ -5,7 +5,7 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from '@/components/ui/popover';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
 import {
@@ -21,10 +21,15 @@ import Image from 'next/image';
 import { Input } from '@/components/ui/input';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../lib/store';
+import { removeCredentials } from '../lib/slices/authSlice';
 
 const Header = () => {
+  const user = useSelector((state: RootState) => state.auth.userInfo);
+  const dispatch = useDispatch();
   const [showPopover, setShowPopover] = useState(false);
-  const [cart, setCart] = useState([
+  const cart = [
     {
       name: 'Cozy Sweater',
       price: 49.99,
@@ -35,15 +40,11 @@ const Header = () => {
       price: 79.99,
       image: '/placeholder.svg',
     },
-  ]);
+  ];
 
-  const removeFromCart = (item: {
-    name: string;
-    price?: number;
-    image?: string;
-  }) => {
-    setCart(cart.filter((i) => i.name !== item.name));
-  };
+  function logout() {
+    dispatch(removeCredentials());
+  }
 
   return (
     <header className='bg-background border-b shadow-sm sticky top-0 z-30 flex justify-center'>
@@ -101,47 +102,54 @@ const Header = () => {
           </Button>
         </div>
         <div className='ml-4'>
-          <Popover open={showPopover} onOpenChange={setShowPopover}>
-            <PopoverTrigger asChild>
-              <Button size='icon' variant='ghost'>
-                <UserIcon className='w-6 h-6' />
-                <span className='sr-only'>User</span>
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className='w-80 p-4'>
-              <div className='flex items-center gap-4'>
-                <Avatar>
-                  <AvatarImage src='/placeholder-user.jpg' alt='User Avatar' />
-                  <AvatarFallback>JD</AvatarFallback>
-                </Avatar>
-                <div>
-                  <h4 className='font-medium'>John Doe</h4>
-                  <p className='text-sm text-muted-foreground'>
-                    johndoe@example.com
-                  </p>
-                </div>
-              </div>
-              <Separator className='my-4' />
-              <div className='grid gap-2'>
-                <Link
-                  href='/orders'
-                  className='flex items-center gap-2 hover:bg-muted rounded-md p-2'
-                  prefetch={false}
-                >
-                  <CommandIcon className='w-5 h-5' />
-                  <span>Orders</span>
-                </Link>
-                <Link
-                  href='#'
-                  className='flex items-center gap-2 hover:bg-muted rounded-md p-2'
-                  prefetch={false}
-                >
-                  <LogOutIcon className='w-5 h-5' />
-                  <span>Logout</span>
-                </Link>
-              </div>
-            </PopoverContent>
-          </Popover>
+          {user && (
+            <>
+              <Popover open={showPopover} onOpenChange={setShowPopover}>
+                <PopoverTrigger asChild>
+                  <Button size='icon' variant='ghost'>
+                    <UserIcon className='w-6 h-6' />
+                    <span className='sr-only'>User</span>
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className='w-80 p-4'>
+                  <div className='flex items-center gap-4'>
+                    <Avatar>
+                      <AvatarFallback>
+                        {user?.name
+                          .split(' ')
+                          .map((x) => x[0])
+                          .join('')}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <h4 className='font-medium'>{user?.name}</h4>
+                      <p className='text-sm text-muted-foreground'>
+                        {user?.email}
+                      </p>
+                    </div>
+                  </div>
+                  <Separator className='my-4' />
+                  <div className='grid gap-2'>
+                    <Link
+                      href='/orders'
+                      className='flex items-center gap-2 hover:bg-muted rounded-md p-2'
+                      prefetch={false}
+                    >
+                      <CommandIcon className='w-5 h-5' />
+                      <span>Orders</span>
+                    </Link>
+                    <span
+                      className='flex items-center gap-2 hover:bg-muted rounded-md p-2 hover:cursor-pointer'
+                      onClick={logout}
+                    >
+                      <LogOutIcon className='w-5 h-5' />
+                      <span>Logout</span>
+                    </span>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </>
+          )}
         </div>
         <div className='ml-4'>
           <Popover>
@@ -182,11 +190,7 @@ const Header = () => {
                         </div>
                         <div className='flex items-center gap-2'>
                           <span className='font-bold'>${item.price}</span>
-                          <Button
-                            size='icon'
-                            variant='ghost'
-                            onClick={() => removeFromCart(item)}
-                          >
+                          <Button size='icon' variant='ghost'>
                             <XIcon className='w-4 h-4' />
                           </Button>
                         </div>

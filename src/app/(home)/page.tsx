@@ -17,8 +17,21 @@ import {
 } from '@/components/ui/carousel';
 import CarouselProduct from '../../components/Carouselproduct';
 import FeaturedProducts from '../../components/FeaturedProducts';
+import { useGetAllProductsQuery } from '../../lib/slices/productsSlice';
+import Loader from '../../components/Loader';
 
 export default function Home() {
+  const { data: products, isLoading } = useGetAllProductsQuery({
+    category: '',
+  });
+
+  if (isLoading) {
+    return (
+      <div className='flex items-center justify-center h-full w-full my-auto'>
+        <Loader />
+      </div>
+    );
+  }
   return (
     <div className='flex flex-col min-h-[100vh]'>
       <main className='flex flex-col'>
@@ -26,9 +39,15 @@ export default function Home() {
           <div className='container px-4 md:px-6'>
             <Carousel className='w-full max-w-6xl'>
               <CarouselContent>
-                {Array.from({ length: 3 }).map((_, i) => (
+                {products?.slice(0, 3).map((product, i) => (
                   <CarouselItem key={i}>
-                    <CarouselProduct key={i} name={`Product ${i}`} />
+                    <CarouselProduct
+                      key={i}
+                      name={product.title}
+                      src={product.image}
+                      price={product.price}
+                      description={product.description}
+                    />
                   </CarouselItem>
                 ))}
               </CarouselContent>
@@ -103,8 +122,14 @@ export default function Home() {
               </p>
             </div>
             <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8'>
-              {Array.from({ length: 4 }).map((_, i) => (
-                <FeaturedProducts key={i} />
+              {products?.slice(4, 8).map((product, i) => (
+                <FeaturedProducts
+                  key={i}
+                  name={product.title}
+                  src={product.image}
+                  price={product.price}
+                  description={product.description}
+                />
               ))}
             </div>
           </div>

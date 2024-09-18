@@ -1,3 +1,5 @@
+'use client';
+
 import Product from '../../../components/Product';
 import {
   Pagination,
@@ -17,8 +19,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useSearchParams } from 'next/navigation';
+import { useGetAllProductsQuery } from '../../../lib/slices/productsSlice';
+import Loader from '../../../components/Loader';
 
-const page = () => {
+const Page = () => {
+  const searchParams = useSearchParams();
+  const category = searchParams.get('category');
+  const { data: products, isLoading } = useGetAllProductsQuery({
+    category: category || '',
+  });
+
+  if (isLoading) {
+    return (
+      <div className='flex items-center justify-center h-full w-full my-auto'>
+        <Loader />
+      </div>
+    );
+  }
+
   return (
     <main>
       <section className='py-12 md:py-16 lg:py-20 flex justify-center'>
@@ -47,12 +66,12 @@ const page = () => {
           </Select>
 
           <div className='flex flex-wrap gap-6'>
-            {Array.from({ length: 8 }).map((_, i) => (
+            {products?.map((product, i) => (
               <Product
-                name={`Product ${i}`}
-                price={i * 100}
-                description={`Description for product ${i}`}
-                imageSrc='/placeholder.png'
+                name={product.title}
+                price={product.price}
+                description={product.description}
+                imageSrc={product.image}
                 key={i}
                 rating={Math.floor(Math.random() * 5) + 1}
               />
@@ -60,29 +79,37 @@ const page = () => {
           </div>
         </div>
       </section>
-      <Pagination className='mb-4'>
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious className='hover:cursor-pointer' />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink className='hover:cursor-pointer' isActive>
-              1
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink className='hover:cursor-pointer'>2</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink className='hover:cursor-pointer'>3</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext className='hover:cursor-pointer' />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+      {!category && (
+        <>
+          <Pagination className='mb-4'>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious className='hover:cursor-pointer' />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink className='hover:cursor-pointer' isActive>
+                  1
+                </PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink className='hover:cursor-pointer'>
+                  2
+                </PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink className='hover:cursor-pointer'>
+                  3
+                </PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationNext className='hover:cursor-pointer' />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </>
+      )}
     </main>
   );
 };
 
-export default page;
+export default Page;
