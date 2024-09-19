@@ -28,6 +28,7 @@ import { useRouter } from 'next/navigation';
 import { useLoginMutation } from '../../../../lib/slices/logApiSlice';
 import { setCredentials } from '../../../../lib/slices/authSlice';
 import { useToast } from '../../../../hooks/use-toast';
+import { useSearchParams } from 'next/navigation';
 
 export default function Page() {
   const user = useSelector((state: RootState) => state.auth.userInfo);
@@ -35,6 +36,8 @@ export default function Page() {
   const dispatch = useDispatch();
   const [login, { isLoading }] = useLoginMutation();
   const { toast } = useToast();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get('redirect') || '/';
 
   const formSchema = z.object({
     email: z.string().email({ message: 'Must be a valid email' }),
@@ -78,9 +81,9 @@ export default function Page() {
 
   useEffect(() => {
     if (user) {
-      router.push('/');
+      router.push(redirect);
     }
-  }, [user, router]);
+  }, [user, router, redirect]);
 
   return (
     <div className='mx-auto my-auto'>
@@ -121,7 +124,7 @@ export default function Page() {
                     <div className='flex items-center'>
                       <FormLabel>Password</FormLabel>
                       <Link
-                        href='/auth/new-password'
+                        href='/auth/reset-password'
                         className='ml-auto inline-block text-sm underline'
                       >
                         Forgot your password?

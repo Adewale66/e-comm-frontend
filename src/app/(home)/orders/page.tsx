@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 import {
   Card,
@@ -6,16 +8,20 @@ import {
   CardFooter,
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationPrevious,
-  PaginationLink,
-  PaginationNext,
-} from '../../../components/ui/pagination';
+import { RootState } from '../../../lib/store';
+import { useSelector } from 'react-redux';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
-const page = () => {
+const Page = () => {
+  const user = useSelector((state: RootState) => state.auth.userInfo);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!user) {
+      router.push('/auth/signin?redirect=/orders');
+    }
+  }, [user, router]);
   const orders = [
     {
       id: 1,
@@ -148,29 +154,8 @@ const page = () => {
           </div>
         </div>
       </section>
-      <Pagination className='mb-4'>
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious className='hover:cursor-pointer' />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink className='hover:cursor-pointer' isActive>
-              1
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink className='hover:cursor-pointer'>2</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink className='hover:cursor-pointer'>3</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext className='hover:cursor-pointer' />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
     </main>
   );
 };
 
-export default page;
+export default Page;

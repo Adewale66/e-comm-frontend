@@ -24,8 +24,8 @@ const CarouselProduct = ({
           width={600}
           height={400}
           alt='Featured Product'
-          className='w-full h-[300px] md:h-[400px] lg:h-[500px] object-cover rounded-lg bg-black'
-          style={{ aspectRatio: '600/400', objectFit: 'contain' }}
+          className='w-full h-[300px] md:h-[400px] lg:h-[500px] object-cover rounded-lg'
+          style={{ aspectRatio: '600/400', objectFit: 'cover' }}
         />
       </div>
       <div className='col-span-1 md:col-span-1 lg:col-span-2 flex flex-col justify-center gap-4'>

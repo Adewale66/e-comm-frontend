@@ -21,7 +21,7 @@ const FeaturedProducts = ({
         height={400}
         alt='Product Image'
         className='w-full h-[300px] object-cover rounded-lg'
-        style={{ aspectRatio: '400/400', objectFit: 'contain' }}
+        style={{ aspectRatio: '400/400', objectFit: 'cover' }}
       />
       <div className='flex flex-col gap-2'>
         <h3 className='text-lg font-medium'>{name}</h3>

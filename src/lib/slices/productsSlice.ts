@@ -7,16 +7,21 @@ export interface Product {
   category: string;
   image: string;
   price: number;
+  tag: string;
 }
 
 export const prouctsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getAllProducts: builder.query<Product[], { category: string }>({
-      query: (data) => 'products?category=' + data.category,
+    getAllProducts: builder.query<
+      Product[],
+      { category: string; page: string }
+    >({
+      query: (data) =>
+        'products?category=' + data.category + '&page=' + data.page,
     }),
 
-    getProduct: builder.query<Product, { id: string }>({
-      query: (data) => 'products/' + data.id,
+    getProduct: builder.query<Product, { tag: string }>({
+      query: (data) => 'products/' + data.tag,
     }),
   }),
 });

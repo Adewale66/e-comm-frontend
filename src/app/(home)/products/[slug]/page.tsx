@@ -1,17 +1,31 @@
+'use client';
+
 import Image from 'next/image';
 import React from 'react';
 import { StarIcon } from '../../../../components/icons';
 import { Button } from '../../../../components/ui/button';
+import { useGetProductQuery } from '../../../../lib/slices/productsSlice';
+import Loader from '../../../../components/Loader';
 
-export default function page({ params }: { params: { slug: string } }) {
+export default function Page({ params }: { params: { slug: string } }) {
   const product = params.slug
     .replace(/-/g, ' ')
     .split(' ')
     .map((word) => capitalizeFirstLetter(word))
     .join(' ');
+  const tag = params.slug;
+  const { data, isLoading } = useGetProductQuery({ tag });
 
   function capitalizeFirstLetter(string: string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  if (isLoading) {
+    return (
+      <div className='flex items-center justify-center h-full w-full my-auto'>
+        <Loader />
+      </div>
+    );
   }
 
   return (
@@ -21,18 +35,18 @@ export default function page({ params }: { params: { slug: string } }) {
           <div className='grid md:grid-cols-2 gap-8'>
             <div>
               <Image
-                src='/placeholder.png'
+                src={data?.image || '/placeholder.png'}
                 width={600}
                 height={600}
                 alt='Product Image'
                 className='w-full h-[400px] object-cover rounded-lg'
-                style={{ aspectRatio: '600/600', objectFit: 'cover' }}
+                style={{ aspectRatio: '600/600', objectFit: 'contain' }}
               />
             </div>
             <div>
               <h1 className='text-3xl font-bold'>{product}</h1>
               <p className='text-muted-foreground text-lg mt-2'>
-                Stay warm and stylish in this soft, comfortable sweater
+                {data?.category}
               </p>
               <div className='flex items-center gap-4 mt-4'>
                 <div className='flex items-center gap-0.5'>
@@ -45,7 +59,7 @@ export default function page({ params }: { params: { slug: string } }) {
                 <span className='text-muted-foreground text-sm'>(4.3)</span>
               </div>
               <div className='mt-6'>
-                <span className='text-3xl font-bold'>$49.99</span>
+                <span className='text-3xl font-bold'>${data?.price}</span>
               </div>
               <div className='mt-6 flex gap-4'>
                 <Button size='lg'>Add to Cart</Button>
@@ -53,11 +67,7 @@ export default function page({ params }: { params: { slug: string } }) {
               <div className='mt-8'>
                 <h2 className='text-2xl font-bold'>Description</h2>
                 <p className='text-muted-foreground text-lg mt-2'>
-                  This cozy sweater is made from high-quality materials and
-                  designed to keep you warm and comfortable all season long. The
-                  soft, plush fabric and relaxed fit make it perfect for
-                  everyday wear, while the stylish design adds a touch of
-                  elegance to any outfit.
+                  {data?.description}
                 </p>
               </div>
             </div>

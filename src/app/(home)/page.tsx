@@ -23,6 +23,7 @@ import Loader from '../../components/Loader';
 export default function Home() {
   const { data: products, isLoading } = useGetAllProductsQuery({
     category: '',
+    page: '1',
   });
 
   if (isLoading) {
@@ -72,7 +73,7 @@ export default function Home() {
             </div>
             <div className='flex items-center justify-around gap-4 flex-wrap'>
               <Link
-                href='/products?category=women'
+                href='#'
                 className='flex flex-col items-center gap-2 p-4 rounded-lg hover:bg-background transition-colors'
                 prefetch={false}
               >
@@ -82,7 +83,7 @@ export default function Home() {
                 </span>
               </Link>
               <Link
-                href='/products?category=men'
+                href='#'
                 className='flex flex-col items-center gap-2 p-4 rounded-lg hover:bg-background transition-colors'
                 prefetch={false}
               >
@@ -92,7 +93,7 @@ export default function Home() {
                 </span>
               </Link>
               <Link
-                href='/products?category=jewelery'
+                href='#'
                 className='flex flex-col items-center gap-2 p-4 rounded-lg hover:bg-background transition-colors'
                 prefetch={false}
               >
@@ -100,7 +101,7 @@ export default function Home() {
                 <span className='text-sm font-medium'>Jewelery</span>
               </Link>
               <Link
-                href='/products?category=electronics'
+                href='#'
                 className='flex flex-col items-center gap-2 p-4 rounded-lg hover:bg-background transition-colors'
                 prefetch={false}
               >
@@ -122,7 +123,7 @@ export default function Home() {
               </p>
             </div>
             <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8'>
-              {products?.slice(4, 8).map((product, i) => (
+              {products?.slice(4).map((product, i) => (
                 <FeaturedProducts
                   key={i}
                   name={product.title}

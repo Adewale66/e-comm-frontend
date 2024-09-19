@@ -17,11 +17,6 @@ interface LoginResponse {
   };
 }
 
-interface RegisterResponse {
-  status: string;
-  message: string;
-}
-
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation<
@@ -35,7 +30,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
       }),
     }),
 
-    register: builder.mutation<RegisterResponse, Credentials>({
+    register: builder.mutation<void, Credentials>({
       query: (credentials) => ({
         url: 'auth/register',
         method: 'POST',
@@ -50,8 +45,32 @@ export const authApiSlice = apiSlice.injectEndpoints({
         body: credentials,
       }),
     }),
+
+    verifyOtp: builder.mutation<void, { code: string }>({
+      query: (credentials) => ({
+        url: 'auth/verify-otp',
+        method: 'POST',
+        body: credentials,
+      }),
+    }),
+
+    resetPassword: builder.mutation<
+      void,
+      Omit<Credentials, 'firstName' | 'lastName'>
+    >({
+      query: (credentials) => ({
+        url: 'auth/reset-password',
+        method: 'PATCH',
+        body: credentials,
+      }),
+    }),
   }),
 });
 
-export const { useLoginMutation, useRegisterMutation, useSendOtpCodeMutation } =
-  authApiSlice;
+export const {
+  useLoginMutation,
+  useRegisterMutation,
+  useSendOtpCodeMutation,
+  useVerifyOtpMutation,
+  useResetPasswordMutation,
+} = authApiSlice;

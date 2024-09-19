@@ -10,24 +10,18 @@ import {
   PaginationPrevious,
 } from '@/components/ui/pagination';
 
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { useSearchParams } from 'next/navigation';
 import { useGetAllProductsQuery } from '../../../lib/slices/productsSlice';
 import Loader from '../../../components/Loader';
+import { useSearchParams } from 'next/navigation';
 
 const Page = () => {
   const searchParams = useSearchParams();
-  const category = searchParams.get('category');
+
+  const page = searchParams.get('page') || '1';
+
   const { data: products, isLoading } = useGetAllProductsQuery({
-    category: category || '',
+    category: '',
+    page,
   });
 
   if (isLoading) {
@@ -40,7 +34,7 @@ const Page = () => {
 
   return (
     <main>
-      <section className='py-12 md:py-16 lg:py-20 flex justify-center'>
+      <section className='  flex justify-center'>
         <div className='container px-4 md:px-6'>
           <div className='flex flex-col items-center text-center gap-4 mb-8'>
             <h2 className='text-3xl md:text-4xl font-bold'>All Products</h2>
@@ -49,21 +43,6 @@ const Page = () => {
               to find the perfect fit for your needs.
             </p>
           </div>
-          <Select>
-            <SelectTrigger className='w-[180px] mb-3'>
-              <SelectValue placeholder='Filter category' />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Categories</SelectLabel>
-                <SelectItem value='all'>All</SelectItem>
-                <SelectItem value='men'> Men&rsquo;s Clothing</SelectItem>
-                <SelectItem value='women'>Women&rsquo;s Clothing</SelectItem>
-                <SelectItem value='jewelery'>Jewelery</SelectItem>
-                <SelectItem value='electronics'>Electronics</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
 
           <div className='flex flex-wrap gap-6'>
             {products?.map((product, i) => (
@@ -79,35 +58,58 @@ const Page = () => {
           </div>
         </div>
       </section>
-      {!category && (
-        <>
-          <Pagination className='mb-4'>
-            <PaginationContent>
+
+      <Pagination className='mb-4'>
+        <PaginationContent>
+          {page !== '1' && (
+            <>
               <PaginationItem>
-                <PaginationPrevious className='hover:cursor-pointer' />
+                <PaginationPrevious
+                  href={'/products?page=' + (parseInt(page) - 1)}
+                  className='hover:cursor-pointer'
+                />
               </PaginationItem>
+            </>
+          )}
+          <PaginationItem>
+            <PaginationLink
+              className='hover:cursor-pointer'
+              isActive={page === '1'}
+              href='/products?page=1'
+            >
+              1
+            </PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink
+              href='/products?page=2'
+              className='hover:cursor-pointer'
+              isActive={page === '2'}
+            >
+              2
+            </PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink
+              href='/products?page=3'
+              className='hover:cursor-pointer'
+              isActive={page === '3'}
+            >
+              3
+            </PaginationLink>
+          </PaginationItem>
+          {page !== '3' && (
+            <>
               <PaginationItem>
-                <PaginationLink className='hover:cursor-pointer' isActive>
-                  1
-                </PaginationLink>
+                <PaginationNext
+                  href={'/products?page=' + (parseInt(page) + 1)}
+                  className='hover:cursor-pointer'
+                />
               </PaginationItem>
-              <PaginationItem>
-                <PaginationLink className='hover:cursor-pointer'>
-                  2
-                </PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink className='hover:cursor-pointer'>
-                  3
-                </PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationNext className='hover:cursor-pointer' />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </>
-      )}
+            </>
+          )}
+        </PaginationContent>
+      </Pagination>
     </main>
   );
 };
