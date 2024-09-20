@@ -259,14 +259,20 @@ export default function Page() {
             <Button onClick={verifyOtp} disabled={loader} className='w-full'>
               {loader ? 'Please wait...' : 'Verify OTP'}
             </Button>
-            <Button
-              onClick={() => getOtp(userEmail)}
-              variant='outline'
-              className='w-full'
-              disabled={resendCodeTimer > 0}
-            >
-              Resend OTP code {resendCodeTimer > 0 && `(${resendCodeTimer})`}
-            </Button>
+            <div className='flex items-center gap-2'>
+              <span>Didn&apos;t receive code?</span>
+              <Button
+                onClick={() => getOtp(userEmail)}
+                variant='outline'
+                className=' border-none text-primary bg-transparent hover:bg-transparent text-blue-500 hover:text-blue-700'
+                disabled={resendCodeTimer > 0}
+              >
+                {resendCodeTimer > 0
+                  ? `Resend code in ${resendCodeTimer}`
+                  : 'Resend code'}
+                {/* {resendCodeTimer > 0 && `(${resendCodeTimer})`} */}
+              </Button>
+            </div>
           </CardFooter>
         </div>
         <div

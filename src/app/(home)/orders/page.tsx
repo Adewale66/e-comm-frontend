@@ -13,6 +13,8 @@ import { useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
+export const dynamic = 'force-dynamic';
+
 const Page = () => {
   const user = useSelector((state: RootState) => state.auth.userInfo);
   const router = useRouter();
@@ -87,7 +89,7 @@ const Page = () => {
     },
   ];
   return (
-    <main className='flex flex-col items-center w-full justify-center'>
+    <main className='flex flex-col bg-green-100'>
       <section className='py-12 md:py-16 lg:py-20'>
         <div className='container px-4 md:px-6'>
           <h2 className='text-2xl font-bold mb-6'>Order History</h2>

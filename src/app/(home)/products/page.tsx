@@ -37,7 +37,9 @@ const Page = () => {
       <section className='  flex justify-center'>
         <div className='container px-4 md:px-6'>
           <div className='flex flex-col items-center text-center gap-4 mb-8'>
-            <h2 className='text-3xl md:text-4xl font-bold'>All Products</h2>
+            <h2 className='text-3xl md:text-4xl font-bold mt-4'>
+              All Products
+            </h2>
             <p className='text-muted-foreground text-lg max-w-md'>
               Browse through our extensive collection of high-quality products
               to find the perfect fit for your needs.

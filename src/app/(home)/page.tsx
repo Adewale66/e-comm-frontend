@@ -73,7 +73,7 @@ export default function Home() {
             </div>
             <div className='flex items-center justify-around gap-4 flex-wrap'>
               <Link
-                href='#'
+                href='/category/women'
                 className='flex flex-col items-center gap-2 p-4 rounded-lg hover:bg-background transition-colors'
                 prefetch={false}
               >
@@ -83,7 +83,7 @@ export default function Home() {
                 </span>
               </Link>
               <Link
-                href='#'
+                href='/category/men'
                 className='flex flex-col items-center gap-2 p-4 rounded-lg hover:bg-background transition-colors'
                 prefetch={false}
               >
@@ -93,7 +93,7 @@ export default function Home() {
                 </span>
               </Link>
               <Link
-                href='#'
+                href='/category/jewelery'
                 className='flex flex-col items-center gap-2 p-4 rounded-lg hover:bg-background transition-colors'
                 prefetch={false}
               >
@@ -101,7 +101,7 @@ export default function Home() {
                 <span className='text-sm font-medium'>Jewelery</span>
               </Link>
               <Link
-                href='#'
+                href='/category/electronics'
                 className='flex flex-col items-center gap-2 p-4 rounded-lg hover:bg-background transition-colors'
                 prefetch={false}
               >

@@ -3,6 +3,7 @@ import { RootState } from '../store';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: process.env.NEXT_PUBLIC_API_URL,
+  credentials: 'include',
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.userInfo?.access_token;
 
@@ -14,5 +15,6 @@ const baseQuery = fetchBaseQuery({
 
 export const apiSlice = createApi({
   baseQuery,
+  tagTypes: ['Cart'],
   endpoints: () => ({}),
 });

@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import React from 'react';
 import { Button } from './ui/button';
+import Link from 'next/link';
 
 const FeaturedProducts = ({
   name,
@@ -14,14 +15,17 @@ const FeaturedProducts = ({
   src: string;
 }) => {
   return (
-    <div className='flex flex-col gap-4'>
+    <Link
+      href={`/products/${name.split(' ').join('-').toLowerCase()}`}
+      className='flex flex-col gap-4'
+    >
       <Image
         src={src}
         width={400}
         height={400}
         alt='Product Image'
-        className='w-full h-[300px] object-cover rounded-lg'
-        style={{ aspectRatio: '400/400', objectFit: 'cover' }}
+        className='w-full h-[250px] object-cover rounded-lg'
+        style={{ aspectRatio: '400/400', objectFit: 'fill' }}
       />
       <div className='flex flex-col gap-2'>
         <h3 className='text-lg font-medium'>{name}</h3>
@@ -31,7 +35,7 @@ const FeaturedProducts = ({
           <Button size='sm'>Add to Cart</Button>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

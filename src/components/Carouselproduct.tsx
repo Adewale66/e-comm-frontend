@@ -25,7 +25,7 @@ const CarouselProduct = ({
           height={400}
           alt='Featured Product'
           className='w-full h-[300px] md:h-[400px] lg:h-[500px] object-cover rounded-lg'
-          style={{ aspectRatio: '600/400', objectFit: 'cover' }}
+          style={{ aspectRatio: '600/400', objectFit: 'fill' }}
         />
       </div>
       <div className='col-span-1 md:col-span-1 lg:col-span-2 flex flex-col justify-center gap-4'>

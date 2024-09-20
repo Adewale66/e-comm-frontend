@@ -26,11 +26,11 @@ const Product = ({
       >
         <Image
           src={imageSrc}
-          width={350}
-          height={350}
+          width={150}
+          height={150}
           alt='Product Image'
-          className='w-full h-[300px] object-cover rounded-lg'
-          style={{ aspectRatio: '400/400', objectFit: 'cover' }}
+          className='w-full h-[250px] object-cover rounded-lg'
+          style={{ aspectRatio: '1/1', objectFit: 'fill' }}
         />
         <div className='flex flex-col gap-2'>
           <h3 className='text-lg font-medium'>{name} </h3>

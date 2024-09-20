@@ -21,9 +21,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../../lib/store';
-import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import { useLoginMutation } from '../../../../lib/slices/logApiSlice';
 import { setCredentials } from '../../../../lib/slices/authSlice';
@@ -31,7 +29,6 @@ import { useToast } from '../../../../hooks/use-toast';
 import { useSearchParams } from 'next/navigation';
 
 export default function Page() {
-  const user = useSelector((state: RootState) => state.auth.userInfo);
   const router = useRouter();
   const dispatch = useDispatch();
   const [login, { isLoading }] = useLoginMutation();
@@ -69,7 +66,7 @@ export default function Page() {
         description: 'Successfully logged in',
         duration: 3500,
       });
-      router.push('/');
+      router.push(redirect);
     } catch (error) {
       toast({
         variant: 'destructive',
@@ -78,12 +75,6 @@ export default function Page() {
       });
     }
   }
-
-  useEffect(() => {
-    if (user) {
-      router.push(redirect);
-    }
-  }, [user, router, redirect]);
 
   return (
     <div className='mx-auto my-auto'>
