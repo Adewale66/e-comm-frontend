@@ -130,7 +130,6 @@ export default function Page() {
   }
 
   async function verifyOtp() {
-    if (intervalState) clearInterval(intervalState);
     setLoader(true);
 
     try {
@@ -141,6 +140,8 @@ export default function Page() {
         duration: 2000,
       });
       setStep3(true);
+      console.log('here 1');
+      if (intervalState) clearInterval(intervalState);
     } catch (error: any) {
       toast({
         variant: 'destructive',
