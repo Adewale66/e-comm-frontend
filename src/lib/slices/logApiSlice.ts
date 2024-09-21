@@ -13,7 +13,7 @@ interface LoginResponse {
   data: {
     name: string;
     email: string;
-    acces_token: string;
+    access_token: string;
   };
 }
 

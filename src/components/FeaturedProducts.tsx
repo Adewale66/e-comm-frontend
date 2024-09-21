@@ -1,24 +1,71 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+'use clientt';
+
 import Image from 'next/image';
-import React from 'react';
 import { Button } from './ui/button';
-import Link from 'next/link';
+import { RootState } from '../lib/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { useAddToCartMutation } from '../lib/slices/cartApiSlice';
+import { addToCart } from '../lib/slices/guestCart';
+import { useToast } from '../hooks/use-toast';
+import { useRouter } from 'next/navigation';
 
 const FeaturedProducts = ({
   name,
   description,
   price,
   src,
+  id,
 }: {
   name: string;
   description: string;
   price: number;
   src: string;
+  id: string;
 }) => {
+  const user = useSelector((state: RootState) => state.auth.userInfo);
+  const dispatch = useDispatch();
+  const [addItem, { isLoading }] = useAddToCartMutation();
+  const { toast } = useToast();
+  const router = useRouter();
+
+  async function addItemToCart() {
+    if (user) {
+      try {
+        await addItem({
+          productId: id,
+          quantity: 1,
+        }).unwrap();
+      } catch (error: any) {
+        if (error.data.message === 'Invalid JWT') {
+          router.push('/auth/signin');
+        } else
+          toast({
+            description: 'Error adding to cart',
+            duration: 2500,
+            variant: 'destructive',
+          });
+      }
+    } else {
+      dispatch(
+        addToCart({
+          productId: id,
+          name: name,
+          price: price,
+          image: src,
+          quantity: 1,
+          subtotal: price,
+        }),
+      );
+    }
+    toast({
+      description: 'Added to cart',
+      duration: 2500,
+    });
+  }
+
   return (
-    <Link
-      href={`/products/${name.split(' ').join('-').toLowerCase()}`}
-      className='flex flex-col gap-4'
-    >
+    <div className='flex flex-col gap-4'>
       <Image
         src={src}
         width={400}
@@ -32,10 +79,12 @@ const FeaturedProducts = ({
         <p className='text-muted-foreground text-sm'>{description}</p>
         <div className='flex items-center justify-between'>
           <span className='text-lg font-bold'>${price}</span>
-          <Button size='sm'>Add to Cart</Button>
+          <Button size='sm' onClick={addItemToCart} disabled={isLoading}>
+            Add to Cart
+          </Button>
         </div>
       </div>
-    </Link>
+    </div>
   );
 };
 

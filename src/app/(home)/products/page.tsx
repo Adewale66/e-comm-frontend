@@ -49,6 +49,7 @@ const Page = () => {
           <div className='flex flex-wrap gap-6'>
             {products?.map((product, i) => (
               <Product
+                id={product.id}
                 name={product.title}
                 price={product.price}
                 description={product.description}

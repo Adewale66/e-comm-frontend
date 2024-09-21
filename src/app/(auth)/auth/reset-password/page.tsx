@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useState } from 'react';
@@ -117,10 +118,10 @@ export default function Page() {
           setResendCodeTimer((prev) => prev - 1);
         }, 1000),
       );
-    } catch (error) {
+    } catch (error: any) {
       toast({
         variant: 'destructive',
-        description: 'Failed to send OTP code',
+        description: error.data.message,
         duration: 2000,
       });
     } finally {
@@ -140,10 +141,10 @@ export default function Page() {
         duration: 2000,
       });
       setStep3(true);
-    } catch (error) {
+    } catch (error: any) {
       toast({
         variant: 'destructive',
-        description: 'Invalid OTP code',
+        description: error.data.message,
         duration: 2000,
       });
     } finally {
@@ -161,7 +162,12 @@ export default function Page() {
         duration: 2000,
       });
       router.push('/auth/signin');
-    } catch (error) {
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        description: error.data.message,
+        duration: 2000,
+      });
     } finally {
       setLoader(false);
     }

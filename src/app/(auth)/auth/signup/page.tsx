@@ -59,11 +59,11 @@ export default function Page() {
       });
       form.reset();
       router.push('/auth/signin');
-    } catch (error) {
-      console.log(error);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       toast({
         variant: 'destructive',
-        description: 'User already exists',
+        description: error.data.message,
         duration: 3500,
       });
     }

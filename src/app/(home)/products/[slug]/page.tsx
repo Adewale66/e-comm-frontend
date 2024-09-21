@@ -1,11 +1,16 @@
 'use client';
 
 import Image from 'next/image';
-import React from 'react';
-import { StarIcon } from '../../../../components/icons';
+import { useState } from 'react';
+import { MinusIcon, PlusIcon, StarIcon } from '../../../../components/icons';
 import { Button } from '../../../../components/ui/button';
 import { useGetProductQuery } from '../../../../lib/slices/productsSlice';
 import Loader from '../../../../components/Loader';
+import { RootState } from '../../../../lib/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { useToast } from '../../../../hooks/use-toast';
+import { useAddToCartMutation } from '../../../../lib/slices/cartApiSlice';
+import { addToCart } from '../../../../lib/slices/guestCart';
 
 export default function Page({ params }: { params: { slug: string } }) {
   const product = params.slug
@@ -15,6 +20,36 @@ export default function Page({ params }: { params: { slug: string } }) {
     .join(' ');
   const tag = params.slug;
   const { data, isLoading } = useGetProductQuery({ tag });
+  const user = useSelector((state: RootState) => state.auth.userInfo);
+  const dispatch = useDispatch();
+  const [addItem, { isLoading: addedLoading }] = useAddToCartMutation();
+  const { toast } = useToast();
+  const [quantity, setQuantity] = useState(1);
+
+  async function addItemToCart() {
+    if (data)
+      if (user) {
+        await addItem({
+          productId: data?.id,
+          quantity: quantity,
+        }).unwrap();
+      } else {
+        dispatch(
+          addToCart({
+            productId: data?.id,
+            name: data?.title,
+            price: data.price,
+            image: data?.image,
+            quantity: quantity,
+            subtotal: data.price * quantity,
+          }),
+        );
+      }
+    toast({
+      description: 'Added to cart',
+      duration: 2500,
+    });
+  }
 
   function capitalizeFirstLetter(string: string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -62,7 +97,35 @@ export default function Page({ params }: { params: { slug: string } }) {
                 <span className='text-3xl font-bold'>${data?.price}</span>
               </div>
               <div className='mt-6 flex gap-4'>
-                <Button size='lg'>Add to Cart</Button>
+                <div className='flex items-center gap-4'>
+                  <Button
+                    size='icon'
+                    variant='ghost'
+                    onClick={() =>
+                      setQuantity((value) => {
+                        if (value === 1) return 1;
+                        return value - 1;
+                      })
+                    }
+                  >
+                    <MinusIcon className='w-4 h-4' />
+                  </Button>
+                  <span>{quantity}</span>
+                  <Button
+                    size='icon'
+                    variant='ghost'
+                    onClick={() => setQuantity(quantity + 1)}
+                  >
+                    <PlusIcon className='w-4 h-4' />
+                  </Button>
+                </div>
+                <Button
+                  size='lg'
+                  onClick={addItemToCart}
+                  disabled={addedLoading}
+                >
+                  Add to Cart
+                </Button>
               </div>
               <div className='mt-8'>
                 <h2 className='text-2xl font-bold'>Description</h2>

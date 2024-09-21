@@ -9,7 +9,7 @@ const Page = ({ params }: { params: { slug: string } }) => {
 
   const { data: products, isLoading } = useGetAllProductsQuery({
     category,
-    page: '1',	
+    page: '1',
   });
 
   function capitalizeFirstLetter(string: string) {
@@ -30,7 +30,7 @@ const Page = ({ params }: { params: { slug: string } }) => {
         <div className='container px-4 md:px-6'>
           <div className='flex flex-col items-center text-center gap-4 mb-8 mt-6'>
             <h2 className='text-3xl md:text-4xl font-bold'>
-              All {capitalizeFirstLetter(category)} P	roducts
+              All {capitalizeFirstLetter(category)} P roducts
             </h2>
             <p className='text-muted-foreground text-lg max-w-md'>
               Browse through our extensive collection of high-quality products
@@ -41,6 +41,7 @@ const Page = ({ params }: { params: { slug: string } }) => {
           <div className='flex flex-wrap gap-6'>
             {products?.map((product, i) => (
               <Product
+                id={product.id}
                 name={product.title}
                 price={product.price}
                 description={product.description}

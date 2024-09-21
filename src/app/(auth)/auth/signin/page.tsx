@@ -21,20 +21,22 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import { useLoginMutation } from '../../../../lib/slices/logApiSlice';
 import { setCredentials } from '../../../../lib/slices/authSlice';
 import { useToast } from '../../../../hooks/use-toast';
-import { useSearchParams } from 'next/navigation';
+import { RootState } from '../../../../lib/store';
+import { useAddBulkMutation } from '../../../../lib/slices/cartApiSlice';
+import { clearCart } from '../../../../lib/slices/guestCart';
 
 export default function Page() {
   const router = useRouter();
   const dispatch = useDispatch();
   const [login, { isLoading }] = useLoginMutation();
   const { toast } = useToast();
-  const searchParams = useSearchParams();
-  const redirect = searchParams.get('redirect') || '/';
+  const guestCart = useSelector((state: RootState) => state.guestCart);
+  const [addBulk] = useAddBulkMutation();
 
   const formSchema = z.object({
     email: z.string().email({ message: 'Must be a valid email' }),
@@ -58,7 +60,7 @@ export default function Page() {
         setCredentials({
           name: res.data.name,
           email: res.data.email,
-          access_token: res.data.acces_token,
+          access_token: res.data.access_token,
         }),
       );
       toast({
@@ -66,7 +68,15 @@ export default function Page() {
         description: 'Successfully logged in',
         duration: 3500,
       });
-      router.push(redirect);
+
+      try {
+        await addBulk({ products: guestCart.products });
+      } catch (error) {
+      } finally {
+        dispatch(clearCart());
+      }
+
+      router.push('/');
     } catch (error) {
       toast({
         variant: 'destructive',
