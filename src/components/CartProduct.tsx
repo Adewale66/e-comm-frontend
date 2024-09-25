@@ -60,12 +60,15 @@ const CartProduct = ({
           });
       }
     } else {
-      dispatch(
-        updateQuantity({
-          productId,
-          quantity: newQuantity,
-        }),
-      );
+      if (newQuantity == 0) {
+        dispatch(removeFromCart(productId));
+      } else
+        dispatch(
+          updateQuantity({
+            productId,
+            quantity: newQuantity,
+          }),
+        );
     }
   }
 
