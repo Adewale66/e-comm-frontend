@@ -50,7 +50,6 @@ export default function Page() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
     try {
       await register(values).unwrap();
       toast({
